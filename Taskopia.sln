@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taskopia", "Taskopia\Taskopia.csproj", "{EC0CF6F2-B33D-41A2-89F7-0AFC2B558D04}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{14AB173B-C4C9-4366-8C47-467C567BA17D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC0CF6F2-B33D-41A2-89F7-0AFC2B558D04}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC0CF6F2-B33D-41A2-89F7-0AFC2B558D04}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC0CF6F2-B33D-41A2-89F7-0AFC2B558D04}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC0CF6F2-B33D-41A2-89F7-0AFC2B558D04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14AB173B-C4C9-4366-8C47-467C567BA17D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14AB173B-C4C9-4366-8C47-467C567BA17D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14AB173B-C4C9-4366-8C47-467C567BA17D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14AB173B-C4C9-4366-8C47-467C567BA17D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {655668E9-A0CB-4F91-8B47-C4F8B3A9DBD4}
+	EndGlobalSection
+EndGlobal
