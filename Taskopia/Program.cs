@@ -1,4 +1,5 @@
 
+using Microsoft.EntityFrameworkCore;
 using Taskopia.DataAccess;
 
 namespace Taskopia
@@ -11,7 +12,10 @@ namespace Taskopia
 
             builder.Services.AddSwaggerGen();
             builder.Services.AddControllers();
-            builder.Services.AddScoped<NotesDbContext>();
+            builder.Services.AddDbContext<NotesDbContext>(options=>
+            {
+                options.UseNpgsql(builder.Configuration.GetConnectionString("Database"));
+            });
 
             var app = builder.Build();
 

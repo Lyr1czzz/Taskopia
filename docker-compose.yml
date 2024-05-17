@@ -1,16 +1,38 @@
+version: '3.4'
+
 services:
-  postgres:
-    container_name: postgres
-    image: postgres
-    restart: always
-    environment:
-        POSTGRES_DB: Taskopia
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: postgres
+  taskopia:
+    image: ${DOCKER_REGISTRY-}taskopia
+    container_name: taskopia.api
+    build:
+      context: .
+      dockerfile: Taskopia/Dockerfile
     ports:
-        - 5432:5432 
+     -  9000:8080
+     -  9001:8081
+    depends_on:
+    - taskopia.db
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:8081;http://+:8080
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=mypass123
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
     volumes:
-        - postgres-data:/var/lib/postgresql/data
-volumes:
-    postgres-data:
-    
+      - ~/.aspnet/https:/https:ro
+  taskopia.db:
+   image: postgres
+   container_name: taskopia.db
+   environment:
+     POSTGRES_DB: taskopia
+     POSTGRES_USER: postgres
+     POSTGRES_PASSWORD: postgres
+   volumes:
+     - ./.containers/taskopia-db:/var/lib/postgresql/data 
+   ports:
+     - 15432:5432 
+   
+
+
+
+
+
