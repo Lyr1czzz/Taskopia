@@ -1,11 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using Taskopia.Models;
 
 namespace Taskopia.DataAccess
 {
-    public class NotesDbContext : DbContext
+    public class NotesDbContext : IdentityDbContext<User>
     {
         private readonly IConfiguration _configuration;
 
@@ -39,6 +41,17 @@ namespace Taskopia.DataAccess
         {
             base.OnConfiguring(optionsBuilder);
             //optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Database"));
+        }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+             
+            builder.Entity<IdentityRole>().HasData(
+                [
+                    new IdentityRole { Name = "Admin", NormalizedName="ADMIN", ConcurrencyStamp = Guid.NewGuid().ToString() },
+                    new IdentityRole { Name = "Customer", NormalizedName = "CUSTOMER", ConcurrencyStamp = Guid.NewGuid().ToString() },
+                ]);
         }
     }
 }
