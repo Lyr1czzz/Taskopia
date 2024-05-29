@@ -87,7 +87,7 @@ namespace Taskopia.Controllers
             {
                 var cookieOptions = new CookieOptions
                 {
-                    Expires = DateTime.Now.AddHours(1),
+                    Expires = DateTime.UtcNow.AddHours(1),
                     HttpOnly = true,
                     SameSite = SameSiteMode.None,
                     Path = "/",
