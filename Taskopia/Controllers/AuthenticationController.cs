@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using Taskopia.Contracts;
 using Taskopia.DataAccess;
 using Taskopia.Models;
@@ -101,6 +102,57 @@ namespace Taskopia.Controllers
             }
             return Unauthorized();
         }
+
+        [HttpPost]
+        [Route("RefreshTokens")]
+        public async Task<IActionResult> RefreshTokens()
+        {
+            var jwtToken = Request.Cookies["JWT"];
+            var refreshToken = Request.Cookies["Refresh"];
+            if (string.IsNullOrEmpty(jwtToken) ||
+            string.IsNullOrEmpty(refreshToken))
+            {
+                throw new InvalidOperationException("Invalid access token or refresh token");
+            }
+
+            var principal = _tokenProvider.GetPrincipalFromExpiredToken(jwtToken);
+            if (principal is null)
+            {
+                throw new InvalidOperationException("Principal not found");
+            }
+            var userId = principal.Claims.FirstOrDefault(claim => claim.Type ==
+            ClaimTypes.NameIdentifier)?.Value ?? string.Empty;
+            var userForUpdate = await _userManager.FindByIdAsync(userId);
+            if (userForUpdate is null || userForUpdate.RefreshToken != refreshToken || userForUpdate.TokenExpires < DateTime.UtcNow)
+            {
+                throw new Exception("Refresh token expiried or user not found");
+            }
+            var userRoles = await _userManager.GetRolesAsync(userForUpdate);
+            var newJwtToken = _tokenProvider.GenerateJwtToken(userForUpdate, userRoles.ToList());
+            var newRefreshToken = _tokenProvider.GenerateRefreshToken();
+            await UpdateRefreshTokenAsync(userForUpdate,
+            newRefreshToken);
+          
+
+            var response = new AuthenticateResponseDto(newJwtToken, newRefreshToken.Token!);
+            if (response is not null)
+            {
+                var cookieOptions = new CookieOptions
+                {
+                    Expires = DateTime.Now.AddHours(1),
+                    HttpOnly = true,
+                    SameSite = SameSiteMode.None,
+                    Path = "/",
+                    Secure = true,
+                };
+                Response.Cookies.Append("JWT", response.JwtToken, cookieOptions);
+                Response.Cookies.Append("Refresh", response.RefreshToken,
+                cookieOptions);
+                return Ok("Refresh successfully");
+            }
+            return Unauthorized();
+        }
+
 
         private async Task UpdateRefreshTokenAsync(User user, RefreshToken refreshToken)
         {

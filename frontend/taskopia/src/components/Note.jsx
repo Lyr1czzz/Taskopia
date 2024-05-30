@@ -1,4 +1,5 @@
 import {
+    Button,
     Card,
     CardBody,
     CardFooter,
@@ -9,7 +10,16 @@ import {
 } from "@chakra-ui/react"
 import moment from "moment";
 
-export default function Note({title, description, createdAt}){
+export default function Note({id, title, description, createdAt, onDeleteSuccess}){
+
+  const handleDelete = async () => {
+    try {
+      await onDeleteSuccess(id);
+    } catch (error) {
+      console.error('Ошибка при удалении заметки:', error);
+    }
+  }
+  
     return(
         <Card variant={"filled"}>
           <CardHeader>
@@ -21,6 +31,9 @@ export default function Note({title, description, createdAt}){
           </CardBody>
           <Divider borderColor={"gray"}/>
           <CardFooter>{moment(createdAt).format("DD/MM/YYYY hh:mm:ss")}</CardFooter>
+          <Button colorScheme='red' onClick={handleDelete}>
+            Удалить
+          </Button>
         </Card>
     );
 }

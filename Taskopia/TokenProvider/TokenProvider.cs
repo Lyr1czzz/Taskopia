@@ -62,7 +62,7 @@ namespace Taskopia.TokenProviders
                 ValidIssuer =
             _configuration.GetSection("JWTKey:ValidIssuer").Value,
                 IssuerSigningKey = new
-            SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("JWTKey: Secret").Value!)),
+            SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration.GetSection("JWTKey:Secret").Value!)),
                 ValidateLifetime = false
             };
             var tokenHandler = new JwtSecurityTokenHandler();

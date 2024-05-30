@@ -23,7 +23,7 @@ export default function CreateNoteForm({onCreate}) {
             value={note?.description ?? ""}
             onChange={(e) => setNote({...note, description: e.target.value})}
           />
-          <Button type="submit" colorScheme='teal'>
+          <Button type="submit">
             Создать
           </Button>
         </form>

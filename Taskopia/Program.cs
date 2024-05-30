@@ -25,15 +25,15 @@ namespace Taskopia
                 options.UseNpgsql(builder.Configuration.GetConnectionString("Database"));
             });
 
+            builder.Services.AddIdentity<User, IdentityRole>()
+                           .AddEntityFrameworkStores<NotesDbContext>()
+                           .AddDefaultTokenProviders();
 
             builder.Services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme =
-                JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme =
-                JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultScheme =
-                JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
             .AddJwtBearer(options =>
             {
@@ -59,9 +59,7 @@ namespace Taskopia
             });
 
 
-            builder.Services.AddIdentity<User, IdentityRole>()
-                            .AddEntityFrameworkStores<NotesDbContext>()
-                            .AddDefaultTokenProviders();
+           
 
             builder.Services.AddCors(options =>
             {
@@ -74,6 +72,8 @@ namespace Taskopia
             });
 
             var app = builder.Build();
+
+            app.UseHttpsRedirection();
 
             app.UseAuthentication();
             app.UseAuthorization();

@@ -31,3 +31,12 @@ export const createNote = async (note) => {
         console.error(e);
     }
 }
+
+export const removeNote = async (id) => {
+    try {
+        const response = await axios.delete(`https://localhost:7102/notes/${id}`);
+        return response.status;
+    } catch (e) {
+        console.error("Error sending request:", e);
+    }
+};
