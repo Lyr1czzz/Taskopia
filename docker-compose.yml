@@ -1,5 +1,3 @@
-version: '3.4'
-
 services:
   taskopia:
     image: ${DOCKER_REGISTRY-}taskopia
@@ -20,19 +18,13 @@ services:
     volumes:
       - ~/.aspnet/https:/https:ro
   taskopia.db:
-   image: postgres
-   container_name: taskopia.db
-   environment:
-     POSTGRES_DB: taskopia
-     POSTGRES_USER: postgres
-     POSTGRES_PASSWORD: postgres
-   volumes:
-     - ./.containers/taskopia-db:/var/lib/postgresql/data 
-   ports:
-     - 15432:5432 
-   
-
-
-
-
-
+    image: postgres
+    container_name: taskopia.db
+    environment:
+      POSTGRES_DB: taskopia
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./.containers/taskopia-db:/var/lib/postgresql/data 
+    ports:
+      - 15432:5432

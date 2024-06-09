@@ -76,9 +76,9 @@ namespace Taskopia.Controllers
             {
                 throw new InvalidOperationException("Roles not found");
             }
-            var jwtToken = _tokenProvider.GenerateJwtToken(user, userRoles.ToList());
+            var jwtToken = _tokenProvider.GenerateJwtToken(user!, userRoles.ToList());
             var refreshToken = _tokenProvider.GenerateRefreshToken();
-            await UpdateRefreshTokenAsync(user, refreshToken);
+            await UpdateRefreshTokenAsync(user!, refreshToken);
             var response =  new AuthenticateResponseDto(jwtToken, refreshToken.Token!);
 
 

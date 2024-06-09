@@ -10,7 +10,7 @@ using Taskopia.Models;
 namespace Taskopia.Controllers
 {
     [ApiController]
-    //[Authorize]
+
     [Route("[controller]")]
     public class NotesController : Controller
     {
@@ -48,6 +48,7 @@ namespace Taskopia.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> Get([FromQuery] GetNotesRequest request, CancellationToken ct)
         {
             var noteQuery = _dbContext.Notes

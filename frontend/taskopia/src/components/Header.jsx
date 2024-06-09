@@ -27,11 +27,6 @@ export default function Header() {
             Вход
           </Button>
         </Link>
-        <Link to="/register">
-          <Button m={2}>
-            Регистрация
-          </Button>
-        </Link>
         <IconButton
           ml={2}
           icon={colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}

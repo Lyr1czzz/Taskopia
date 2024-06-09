@@ -40,3 +40,34 @@ export const removeNote = async (id) => {
         console.error("Error sending request:", e);
     }
 };
+
+export const registerUser = async (user) => {
+    try {
+      console.log("Sending user data:", user); // отладочная информация
+      const response = await axios.post(`https://localhost:7102/Authentication/Registration`, user);
+      console.log("Server response:", response); // отладочная информация
+      return response.status;
+    } catch (e) {
+      console.error("Error during registration:", e);
+      if (e.response) {
+        console.error("Response data:", e.response.data); // Печатает ответ для анализа
+      }
+      throw e;
+    }
+  };
+  
+  // Функция для входа
+  export const loginUser = async (credentials) => {
+    try {
+      console.log("Sending login credentials:", credentials); // отладочная информация
+      const response = await axios.post(`https://localhost:7102/Authentication/Login`, credentials);
+      console.log("Server response:", response); // отладочная информация
+      return response.data; // Предполагается, что ваш API возвращает токен или другие данные
+    } catch (e) {
+      console.error("Error during login:", e);
+      if (e.response) {
+        console.error("Response data:", e.response.data); // Печатает ответ для анализа
+      }
+      throw e;
+    }
+  };
