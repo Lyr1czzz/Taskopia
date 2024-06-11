@@ -15,7 +15,8 @@ export const fetchNotes = async (filter) => {
     }
     catch(e)
     {
-        console.error(e);
+        console.error("Error fetching notes:", e);
+        throw e;  // Пробросить ошибку для передачи вверх
     }
 }
 
@@ -28,19 +29,31 @@ export const createNote = async (note) => {
     }
     catch(e)
     {
-        console.error(e);
+        console.error("Error creating note:", e);
+        throw e;  // Пробросить ошибку для передачи вверх
     }
 }
+
+export const updateNote = async (note) => {
+  try {
+    const response = await axios.put(`https://localhost:7102/notes/${note.id}`, note);
+    return response.status;
+  } catch (e) {
+    console.error("Error updating note:", e);
+    throw e;  // Пробросить ошибку для передачи вверх
+  }
+};
+
 
 export const removeNote = async (id) => {
     try {
         const response = await axios.delete(`https://localhost:7102/notes/${id}`);
         return response.status;
     } catch (e) {
-        console.error("Error sending request:", e);
+        console.error("Error deleting note:", e);
+        throw e;  // Пробросить ошибку для передачи вверх
     }
 };
-
 export const registerUser = async (user) => {
     try {
       console.log("Sending user data:", user); // отладочная информация
