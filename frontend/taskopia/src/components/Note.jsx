@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { Box, Button, Card, CardBody, CardFooter, CardHeader, Divider, Heading, Text, VStack, Flex, HStack, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay } from "@chakra-ui/react";
+import { Box, Button, Card, CardBody, CardFooter, CardHeader, Divider, Heading, Text, VStack, Flex, HStack, AlertDialog, AlertDialogBody, AlertDialogFooter, AlertDialogHeader, AlertDialogContent, AlertDialogOverlay, Tag } from "@chakra-ui/react";
 import moment from "moment";
 
 export default function Note({
@@ -7,7 +7,7 @@ export default function Note({
   onDeleteSuccess,
   onEdit,
 }) {
-  const { id, title, description, createdAt } = note;
+  const { id, title, description, createdAt, tags } = note;
   
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => setIsOpen(false);
@@ -37,6 +37,11 @@ export default function Note({
       </CardHeader>
       <CardBody>
         <Text>{description}</Text>
+        <HStack spacing={2} mt={4}>
+          {tags.map(tag => (
+            <Tag key={tag} variant="solid" colorScheme="blue">{tag}</Tag>
+          ))}
+        </HStack>
       </CardBody>
       <Divider my={3} />
       <CardFooter>

@@ -1,44 +1,95 @@
-import { Input, Button, Textarea, Box, Heading, VStack, HStack } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import { Box, Button, FormControl, FormLabel, Input, Textarea, Tag, TagLabel, TagCloseButton, HStack } from "@chakra-ui/react";
 
 export default function NoteForm({ note, onSave, onCancelEdit }) {
-  const [currentNote, setCurrentNote] = useState(note || { title: '', description: '' });
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
 
   useEffect(() => {
-    setCurrentNote(note || { title: '', description: '' });
+    if (note) {
+      setTitle(note.title);
+      setDescription(note.description);
+      setTags(note.tags);
+    }
   }, [note]);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    onSave(currentNote);
-    setCurrentNote({ title: '', description: '' });
+  const handleSave = () => {
+    onSave({
+      id: note?.id,
+      title,
+      description,
+      tags
+    });
+    setTitle("");
+    setDescription("");
+    setTags([]);
+    setTagInput("");
+  };
+
+  const handleAddTag = () => {
+    if (tagInput && !tags.includes(tagInput)) {
+      setTags([...tags, tagInput]);
+      setTagInput("");
+    }
+  };
+
+  const handleRemoveTag = (tagToRemove) => {
+    setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
   return (
-    <Box as="form" onSubmit={onSubmit} w="full">
-      <VStack spacing={3}>
-        <Heading size="md">{note ? 'Редактирование заметки' : 'Создание заметки'}</Heading>
+    <Box w="full">
+      <FormControl id="title" isRequired>
+        <FormLabel>Заголовок</FormLabel>
         <Input
-          placeholder='Заголовок'
-          value={currentNote?.title ?? ""}
-          onChange={(e) => setCurrentNote({ ...currentNote, title: e.target.value })}
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
+      </FormControl>
+      <FormControl id="description" mt={4} isRequired>
+        <FormLabel>Описание</FormLabel>
         <Textarea
-          placeholder='Описание'
-          value={currentNote?.description ?? ""}
-          onChange={(e) => setCurrentNote({ ...currentNote, description: e.target.value })}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
-        <HStack spacing={3} w="full">
-          <Button type="submit" colorScheme={note ? 'blue' : 'green'} w="full">
-            {note ? 'Сохранить' : 'Создать'}
-          </Button>
-          {note && (
-            <Button colorScheme="red" w="full" onClick={onCancelEdit}>
-              Отмена
-            </Button>
-          )}
+      </FormControl>
+      <FormControl id="tags" mt={4}>
+        <FormLabel>Теги</FormLabel>
+        <HStack>
+          <Input
+            type="text"
+            value={tagInput}
+            onChange={(e) => setTagInput(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && handleAddTag()}
+          />
+          <Button onClick={handleAddTag}>Добавить</Button>
         </HStack>
-      </VStack>
+        <HStack mt={2}>
+          {tags.map(tag => (
+            <Tag
+              size="md"
+              key={tag}
+              borderRadius="full"
+              variant="solid"
+              colorScheme="blue"
+            >
+              <TagLabel>{tag}</TagLabel>
+              <TagCloseButton onClick={() => handleRemoveTag(tag)} />
+            </Tag>
+          ))}
+        </HStack>
+      </FormControl>
+      <Button mt={4} colorScheme="blue" onClick={handleSave}>
+        {note ? "Обновить" : "Сохранить"}
+      </Button>
+      {note && (
+        <Button mt={4} ml={2} onClick={onCancelEdit}>
+          Отмена
+        </Button>
+      )}
     </Box>
   );
 }
