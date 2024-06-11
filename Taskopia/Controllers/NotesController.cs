@@ -10,7 +10,6 @@ using Taskopia.Models;
 namespace Taskopia.Controllers
 {
     [ApiController]
-
     [Route("[controller]")]
     public class NotesController : Controller
     {
@@ -22,11 +21,29 @@ namespace Taskopia.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody]CreateNoteRequest request, CancellationToken ct)
+        public async Task<IActionResult> Create([FromBody] CreateNoteRequest request, CancellationToken ct)
         {
-            var notes = new Note(request.Title, request.Description);
+            var note = new Note(request.Title, request.Description);
 
-            await _dbContext.Notes.AddAsync(notes, ct);
+            await _dbContext.Notes.AddAsync(note, ct);
+            await _dbContext.SaveChangesAsync(ct);
+
+            return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateNoteRequest request, CancellationToken ct)
+        {
+            var note = await _dbContext.Notes.FindAsync(new object[] { id }, ct);
+            if (note == null)
+            {
+                return NotFound();
+            }
+
+            note.Title = request.Title;
+            note.Description = request.Description;
+
+            _dbContext.Notes.Update(note);
             await _dbContext.SaveChangesAsync(ct);
 
             return Ok();
@@ -48,12 +65,11 @@ namespace Taskopia.Controllers
         }
 
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> Get([FromQuery] GetNotesRequest request, CancellationToken ct)
         {
             var noteQuery = _dbContext.Notes
                 .Where(n => string.IsNullOrWhiteSpace(request.Search) ||
-                n.Title.ToLower().Contains(request.Search.ToLower()));
+                            n.Title.ToLower().Contains(request.Search.ToLower()));
 
             Expression<Func<Note, object>> selectorKey = request.SortItem?.ToLower() switch
             {

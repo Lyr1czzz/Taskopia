@@ -1,20 +1,29 @@
-import { Input, Select } from '@chakra-ui/react';
+import { Box, Input, Select, VStack, Heading } from "@chakra-ui/react";
 
-export default function Filters({filter, setFilter}) {
+export default function Filters({ filter, setFilter }) {
+  const handleInputChange = (e) => {
+    setFilter({ ...filter, [e.target.name]: e.target.value });
+  };
 
-  return ( 
-    <div className='flex flex-col gap-5'>
-    
-    <Input 
-        placeholder='Поиск' 
-        onChange={(e) => setFilter({...filter, search: e.target.value})}
-    />
-    <Select 
-        onChange={(e) => setFilter({...filter, sortOrder: e.target.value})}
-    >
-        <option value={"desc"}>Сначала новые</option>
-        <option value={"asc"}>Сначала старые</option>
-    </Select>
-    </div>
+  return (
+    <Box w="full">
+      <VStack spacing={3}>
+        <Heading size="md">Фильтры</Heading>
+        <Input
+          name="search"
+          placeholder="Поиск"
+          value={filter.search}
+          onChange={handleInputChange}
+        />
+        <Select name="sortItem" value={filter.sortItem} onChange={handleInputChange}>
+          <option value="date">По дате</option>
+          <option value="title">По заголовку</option>
+        </Select>
+        <Select name="sortOrder" value={filter.sortOrder} onChange={handleInputChange}>
+          <option value="asc">По возрастанию</option>
+          <option value="desc">По убыванию</option>
+        </Select>
+      </VStack>
+    </Box>
   );
 }

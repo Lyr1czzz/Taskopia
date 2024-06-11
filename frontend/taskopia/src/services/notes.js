@@ -32,6 +32,16 @@ export const createNote = async (note) => {
     }
 }
 
+export const updateNote = async (note) => {
+  try {
+    const response = await axios.put(`https://localhost:7102/notes/${note.id}`, note);
+    return response.status;
+  } catch (e) {
+    console.error("Error sending update request:", e);
+  }
+};
+
+
 export const removeNote = async (id) => {
     try {
         const response = await axios.delete(`https://localhost:7102/notes/${id}`);
