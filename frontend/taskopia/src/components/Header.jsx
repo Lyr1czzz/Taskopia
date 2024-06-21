@@ -7,9 +7,7 @@ export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
 
   return (
-    <Box
-     p={1}
-    >
+    <Box p={1}>
       <Flex alignItems="center">
         <Link to="/" style={{ textDecoration: 'none' }}>
           <Heading size="md" m={4}>
@@ -18,8 +16,13 @@ export default function Header() {
         </Link>
         <Spacer />
         <Link to="/notes">
-          <Button  m={2}>
+          <Button m={2}>
             Карточки
+          </Button>
+        </Link>
+        <Link to="/timer">
+          <Button m={2}>
+            Таймер
           </Button>
         </Link>
         <Link to="/login">

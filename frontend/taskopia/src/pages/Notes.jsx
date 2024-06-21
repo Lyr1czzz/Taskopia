@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { removeNote, createNote, fetchNotes, updateNote } from '../services/notes';
-import { Box, Flex, VStack, Heading, Container, useColorModeValue, IconButton } from "@chakra-ui/react";
-import { CloseIcon } from "@chakra-ui/icons";
+import { Box, Flex, VStack, Heading, Container } from "@chakra-ui/react";
 import NoteForm from "../components/NoteForm";
 import Filters from "../components/Filters";
 import Note from "../components/Note";
@@ -51,6 +50,7 @@ export default function Notes() {
   };
 
   const onCancelEdit = () => {
+    console.log("Сброс состояния редактирования");
     setEditNote(null);
   };
 

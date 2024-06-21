@@ -148,6 +148,7 @@ namespace Taskopia.Controllers
                 Response.Cookies.Append("JWT", response.JwtToken, cookieOptions);
                 Response.Cookies.Append("Refresh", response.RefreshToken,
                 cookieOptions);
+                //User.FindFirstValue(ClaimTypes.NameIdentifier)!
                 return Ok("Refresh successfully");
             }
             return Unauthorized();

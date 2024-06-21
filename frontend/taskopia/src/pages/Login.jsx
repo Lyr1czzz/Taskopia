@@ -13,7 +13,7 @@ import {
   Link
 } from '@chakra-ui/react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { loginUser } from '../services/notes';
+import axios from 'axios';
 
 export default function Login() {
   const toast = useToast();
@@ -34,33 +34,22 @@ export default function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const data = await loginUser({
-          Email: formData.email,
-          Password: formData.password
+      const response = await axios.post(`https://localhost:7102/Authentication/Login`, formData, { withCredentials: true });
+      console.log('User logged in:', response.data);
+      toast({
+        position: "top-left",
+        status: "success",
+        duration: 5000,
+        description: "Вход выполнен успешно!"
       });
-
-      if (data) {
-        toast({
-          position: "top-left",
-          status: "success",
-          duration: 5000,
-          description: "Вход успешен!"
-        });
-        navigate('/');
-      } else {
-        toast({
-          position: "top-left",
-          status: "error",
-          duration: 5000,
-          description: "Ошибка входа!"
-        });
-      }
+      navigate('/');  // Перенаправление на домашнюю страницу при успешном логине
     } catch (error) {
+      console.error('Error logging user:', error.response.data);
       toast({
         position: "top-left",
         status: "error",
         duration: 5000,
-        description: "Произошла ошибка!"
+        description: "Ошибка при входе!"
       });
     }
   };
@@ -85,21 +74,21 @@ export default function Login() {
         </Heading>
         <form onSubmit={handleSubmit}>
           <Stack spacing={4}>
-            <FormControl id="email">
+            <FormControl id="email" isRequired>
               <FormLabel>Email</FormLabel>
               <Input type="email" value={formData.email} onChange={handleChange} />
             </FormControl>
 
-            <FormControl id="password">
+            <FormControl id="password" isRequired>
               <FormLabel>Пароль</FormLabel>
               <Input type="password" value={formData.password} onChange={handleChange} />
             </FormControl>
 
-            <Button size="lg" mt={4} type="submit">
+            <Button mt={4} size="lg" type="submit">
               Войти
             </Button>
             <Text textAlign="center">
-              Нет аккаунта? <Link as={RouterLink} to="/register" color="teal.500">Зарегистрироваться</Link>
+              Еще нет аккаунта? <Link as={RouterLink} to="/register" color="teal.500">Зарегистрироваться</Link>
             </Text>
           </Stack>
         </form>

@@ -5,6 +5,7 @@ import Register from './pages/Register';
 import Notes from './pages/Notes';
 import Header from './components/Header';
 import Home from './pages/Home';
+import TimerPage from './pages/TimerPage'; // Импортируйте компонент TimerPage
 import NotFoundPage from './pages/NotFoundPage';
 import Footer from './components/Footer';
 
@@ -15,11 +16,12 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/notes" element={<Notes/>} />
-        <Route path="/" element={<Home/>} />
-        <Route path="*" element={<NotFoundPage/>} />
+        <Route path="/notes" element={<Notes />} />
+        <Route path="/timer" element={<TimerPage />} /> {/* Добавьте маршрут для таймера и секундомера */}
+        <Route path="/" element={<Home />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
-      <Footer/>
+      <Footer />
     </Router>
   );
 }

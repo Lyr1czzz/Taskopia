@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Taskopia.Contracts;
@@ -14,6 +16,7 @@ using Taskopia.Models;
 namespace Taskopia.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class NotesController : ControllerBase
     {
@@ -31,7 +34,7 @@ namespace Taskopia.Controllers
         {
             try
             {
-                var note = new Note (request.Title,request.Description, request.Tags );
+                var note = new Note (request.Title,request.Description, request.Tags, Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!));
                 await _dbContext.Notes.AddAsync(note, ct);
                 await _dbContext.SaveChangesAsync(ct);
                 return Ok();
@@ -96,10 +99,12 @@ namespace Taskopia.Controllers
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] GetNotesRequest request, CancellationToken ct)
         {
+
             try
             {
                 var noteQuery = _dbContext.Notes
-                    .Where(n => string.IsNullOrWhiteSpace(request.Search) ||
+                    .Where(n => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!) == n.Id &&
+                                string.IsNullOrWhiteSpace(request.Search) ||
                                 n.Title.ToLower().Contains(request.Search.ToLower()) ||
                                 n.Tags.Any(t => t.ToLower().Contains(request.Search.ToLower())));
 
@@ -120,8 +125,15 @@ namespace Taskopia.Controllers
                 }
 
                 var noteDtos = await noteQuery
-                    .Select(n => new NoteDto(n.Id, n.Title, n.Description, n.CreatedAt, n.Tags))
-                    .ToListAsync(cancellationToken: ct);
+                .Select(n => new NoteDto(
+                    n.Id,
+                    n.Title,
+                    n.Description,
+                    n.CreatedAt,
+                    n.Tags, // Оставляем поле Tags для диагностики
+                    n.UserId
+                ))
+                .ToListAsync(cancellationToken: ct);
 
                 return Ok(new GetNotesResponse(noteDtos));
             }

@@ -1,6 +1,4 @@
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -41,7 +39,10 @@ namespace Taskopia
                 {
                     OnMessageReceived = context =>
                     {
-                        context.Token = context.Request.Cookies["JWT"];
+                        if (context.Request.Cookies.ContainsKey("JWT"))
+                        {
+                            context.Token = context.Request.Cookies["JWT"];
+                        }
                         return Task.CompletedTask;
                     }
                 };
@@ -58,33 +59,32 @@ namespace Taskopia
                 };
             });
 
-
-           
-
             builder.Services.AddCors(options =>
             {
                 options.AddDefaultPolicy(policy =>
                 {
-                    policy.WithOrigins("http://localhost:5173");
-                    policy.AllowAnyHeader();
-                    policy.AllowAnyMethod();
+                    policy.WithOrigins("http://localhost:5173")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .AllowCredentials();
                 });
             });
 
             var app = builder.Build();
 
-            app.UseHttpsRedirection();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
             if (app.Environment.IsDevelopment())
             {
+                app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
 
+            app.UseHttpsRedirection();
+
             app.UseCors();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.MapControllers();
 

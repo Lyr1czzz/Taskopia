@@ -12,6 +12,11 @@ export default function NoteForm({ note, onSave, onCancelEdit }) {
       setTitle(note.title);
       setDescription(note.description);
       setTags(note.tags);
+    } else {
+      setTitle("");
+      setDescription("");
+      setTags([]);
+      setTagInput("");
     }
   }, [note]);
 
@@ -37,6 +42,14 @@ export default function NoteForm({ note, onSave, onCancelEdit }) {
 
   const handleRemoveTag = (tagToRemove) => {
     setTags(tags.filter(tag => tag !== tagToRemove));
+  };
+
+  const handleCancel = () => {
+    setTitle("");
+    setDescription("");
+    setTags([]);
+    setTagInput("");
+    onCancelEdit();
   };
 
   return (
@@ -86,7 +99,7 @@ export default function NoteForm({ note, onSave, onCancelEdit }) {
         {note ? "Обновить" : "Сохранить"}
       </Button>
       {note && (
-        <Button mt={4} ml={2} onClick={onCancelEdit}>
+        <Button mt={4} ml={2} onClick={handleCancel}>
           Отмена
         </Button>
       )}
