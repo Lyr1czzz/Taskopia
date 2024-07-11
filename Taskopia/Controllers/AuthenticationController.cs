@@ -43,9 +43,9 @@ namespace Taskopia.Controllers
             {
                 throw new InvalidOperationException("Failed creation. Exception from repository");
             }
-            if(await _roleManager.RoleExistsAsync("Customer"))
+            if(await _roleManager.RoleExistsAsync("Admin"))
             {
-                await _userManager.AddToRoleAsync(user, "Customer");
+                await _userManager.AddToRoleAsync(user, "Admin");
             }
             return Ok();
         }

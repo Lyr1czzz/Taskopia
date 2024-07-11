@@ -15,6 +15,11 @@ export default function Header() {
           </Heading>
         </Link>
         <Spacer />
+        <Link to="/users">
+          <Button m={2}>
+            Пользователи
+          </Button>
+        </Link>
         <Link to="/notes">
           <Button m={2}>
             Карточки

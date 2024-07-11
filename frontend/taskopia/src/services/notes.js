@@ -98,3 +98,42 @@ export const loginUser = async (credentials) => {
     throw e;
   }
 }
+
+export const fetchUsers = async () => {
+  try {
+    const response = await api.get("/Users", {
+      withCredentials: true
+    });
+
+    return response.data;
+  } catch (e) {
+    console.error("Error fetching users:", e);
+    throw e;
+  }
+};
+
+export const deleteUser = async (userId) => {
+  try {
+    const response = await api.delete(`/Users/${userId}`, {
+      withCredentials: true
+    });
+
+    return response.data;
+  } catch (e) {
+    console.error("Error deleting user:", e);
+    throw e;
+  }
+};
+
+export const updateUser = async (user) => {
+  try {
+    const response = await api.put(`/Users/${user.id}`, user, {
+      withCredentials: true
+    });
+
+    return response.data;
+  } catch (e) {
+    console.error("Error updating user:", e);
+    throw e;
+  }
+};
