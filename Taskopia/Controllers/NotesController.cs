@@ -103,10 +103,10 @@ namespace Taskopia.Controllers
             try
             {
                 var noteQuery = _dbContext.Notes
-                    .Where(n => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!) == n.Id &&
-                                string.IsNullOrWhiteSpace(request.Search) ||
-                                n.Title.ToLower().Contains(request.Search.ToLower()) ||
-                                n.Tags.Any(t => t.ToLower().Contains(request.Search.ToLower())));
+    .Where(n => Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!) == n.UserId &&
+                (string.IsNullOrWhiteSpace(request.Search) ||
+                n.Title.ToLower().Contains(request.Search.ToLower()) ||
+                n.Tags.Any(t => t.ToLower().Contains(request.Search.ToLower()))));
 
                 Expression<Func<Note, object>> selectorKey = request.SortItem?.ToLower() switch
                 {
@@ -130,8 +130,7 @@ namespace Taskopia.Controllers
                     n.Title,
                     n.Description,
                     n.CreatedAt,
-                    n.Tags, // Оставляем поле Tags для диагностики
-                    n.UserId
+                    n.Tags // Оставляем поле Tags для диагностики
                 ))
                 .ToListAsync(cancellationToken: ct);
 

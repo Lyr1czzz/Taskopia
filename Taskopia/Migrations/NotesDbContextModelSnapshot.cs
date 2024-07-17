@@ -51,15 +51,15 @@ namespace Taskopia.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ac4f09e3-3b54-4a3b-8410-9c9f27d54fa4",
-                            ConcurrencyStamp = "f7740422-32e5-4179-9055-855934600512",
+                            Id = "6142edfb-aff3-4149-b270-14da28e5c621",
+                            ConcurrencyStamp = "12d29148-d07d-4190-be50-bd9c01ae95b4",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "a89a978e-f65f-40b5-9729-d959a21a1faf",
-                            ConcurrencyStamp = "1b8d09c5-1778-4893-b13b-4c0727cc8533",
+                            Id = "c01f56d5-9b43-44c0-86a0-c3eda1c6e7f5",
+                            ConcurrencyStamp = "5f830467-d8c1-4e48-a934-5cf8fb9ac37d",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         });

@@ -67,11 +67,9 @@ export const removeNote = async (id) => {
 
 export const registerUser = async (user) => {
   try {
-    console.log("Sending user data:", user);
     const response = await api.post(`/Authentication/Registration`, user, {
       withCredentials: true // Убедитесь, что запрос отправляется с куками
     });
-    console.log("Server response:", response);
     return response.status;
   } catch (e) {
     console.error("Error during registration:", e);
@@ -84,11 +82,9 @@ export const registerUser = async (user) => {
 
 export const loginUser = async (credentials) => {
   try {
-    console.log("Sending login credentials:", credentials);
     const response = await api.post(`/Authentication/Login`, credentials, {
       withCredentials: true // Убедитесь, что запрос отправляется с куками
     });
-    console.log("Server response:", response);
     return response.data;
   } catch (e) {
     console.error("Error during login:", e);

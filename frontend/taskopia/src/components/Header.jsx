@@ -1,10 +1,29 @@
 import { Box, Button, Flex, Heading, Spacer, IconButton, useColorMode } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { SunIcon, MoonIcon } from '@chakra-ui/icons';
 
 export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
+  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+
+  useEffect(() => {
+    const checkAuthentication = () => {
+      // Проверьте, авторизован ли пользователь
+      // Например, проверьте наличие куки с токеном
+      const token = getCookie('token');
+      const isLoggedIn = !!token;
+      setIsLoggedIn(isLoggedIn);
+    };
+  
+    checkAuthentication();
+  }, []);
+
+  const getCookie = (name) => {
+    const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+    console.log()
+    return cookieValue ? cookieValue.pop() : '';
+  };
 
   return (
     <Box p={1}>
@@ -30,9 +49,9 @@ export default function Header() {
             Таймер
           </Button>
         </Link>
-        <Link to="/login">
+          <Link to={isLoggedIn ? '/logout' : '/login'}>
           <Button m={2}>
-            Вход
+            {isLoggedIn ? 'Выход' : 'Вход'}
           </Button>
         </Link>
         <IconButton
