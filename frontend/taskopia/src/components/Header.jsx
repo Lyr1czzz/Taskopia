@@ -1,68 +1,25 @@
-import { Box, Button, Flex, Heading, Spacer, IconButton, useColorMode } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { SunIcon, MoonIcon } from '@chakra-ui/icons';
+import { isAuthenticated, logout } from '../auth';
 
-export default function Header() {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+const Header = () => {
 
-  useEffect(() => {
-    const checkAuthentication = () => {
-      // Проверьте, авторизован ли пользователь
-      // Например, проверьте наличие куки с токеном
-      const token = getCookie('token');
-      const isLoggedIn = !!token;
-      setIsLoggedIn(isLoggedIn);
-    };
-  
-    checkAuthentication();
-  }, []);
-
-  const getCookie = (name) => {
-    const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
-    console.log()
-    return cookieValue ? cookieValue.pop() : '';
+  const handleLogout = async () => {
+    await logout();
   };
 
   return (
-    <Box p={1}>
-      <Flex alignItems="center">
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          <Heading size="md" m={4}>
-            Taskopia📋
-          </Heading>
-        </Link>
-        <Spacer />
-        <Link to="/users">
-          <Button m={2}>
-            Пользователи
-          </Button>
-        </Link>
-        <Link to="/notes">
-          <Button m={2}>
-            Карточки
-          </Button>
-        </Link>
-        <Link to="/timer">
-          <Button m={2}>
-            Таймер
-          </Button>
-        </Link>
-          <Link to={isLoggedIn ? '/logout' : '/login'}>
-          <Button m={2}>
-            {isLoggedIn ? 'Выход' : 'Вход'}
-          </Button>
-        </Link>
-        <IconButton
-          ml={2}
-          icon={colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}
-          isRound="true"
-          size="md"
-          onClick={toggleColorMode}
-          aria-label={`Switch to ${colorMode === 'dark' ? 'light' : 'dark'} mode`}
-        />
-      </Flex>
-    </Box>
+    <header>
+      <nav>
+        <Link to="/">Home</Link>
+        {isAuthenticated() ? (
+          <button onClick={handleLogout}>Logout</button>
+        ) : (
+          <Link to="/login">Login</Link>
+        )}
+      </nav>
+    </header>
   );
-}
+};
+
+export default Header;

@@ -154,6 +154,39 @@ namespace Taskopia.Controllers
             return Unauthorized();
         }
 
+        [HttpPost]
+        [Route("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            // Get the user ID from the JWT token
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized();
+            }
+
+            // Find the user in the database
+            var user = await _userManager.FindByIdAsync(userId);
+
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            // Clear the refresh token for the user
+            user.RefreshToken = null;
+            user.TokenCreated = null;
+            user.TokenExpires = null;
+
+            await _userManager.UpdateAsync(user);
+
+            // Remove the JWT and refresh tokens from the cookies
+            Response.Cookies.Delete("JWT");
+            Response.Cookies.Delete("Refresh");
+
+            return Ok("Logout successful");
+        }
 
         private async Task UpdateRefreshTokenAsync(User user, RefreshToken refreshToken)
         {
