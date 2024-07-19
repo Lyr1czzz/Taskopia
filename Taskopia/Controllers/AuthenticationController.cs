@@ -98,7 +98,7 @@ namespace Taskopia.Controllers
                 cookieOptions);
                 Response.Cookies.Append("Refresh", response.RefreshToken,
                 cookieOptions);
-                return Ok("Login successfully");
+                return Ok(new { message = "Login successful" });
             }
             return Unauthorized();
         }
@@ -154,6 +154,14 @@ namespace Taskopia.Controllers
             return Unauthorized();
         }
 
+        [HttpGet]
+        [Route("Status")]
+        public IActionResult CheckAuthStatus()
+        {
+            var isAuthenticated = User.Identity?.IsAuthenticated ?? false;
+            return Ok(new { isAuthenticated });
+        }
+
         [HttpPost]
         [Route("Logout")]
         public async Task<IActionResult> Logout()
@@ -182,10 +190,22 @@ namespace Taskopia.Controllers
             await _userManager.UpdateAsync(user);
 
             // Remove the JWT and refresh tokens from the cookies
-            Response.Cookies.Delete("JWT");
-            Response.Cookies.Delete("Refresh");
+            Response.Cookies.Delete("JWT", new CookieOptions
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.None,
+                Secure = true,
+                Path = "/"
+            });
+            Response.Cookies.Delete("Refresh", new CookieOptions
+            {
+                HttpOnly = true,
+                SameSite = SameSiteMode.None,
+                Secure = true,
+                Path = "/"
+            });
 
-            return Ok("Logout successful");
+            return Ok(new { message = "Logout successful" });
         }
 
         private async Task UpdateRefreshTokenAsync(User user, RefreshToken refreshToken)

@@ -1,28 +1,17 @@
 import { Box, Button, Flex, Heading, Spacer, IconButton, useColorMode } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { SunIcon, MoonIcon } from '@chakra-ui/icons';
+import { useAuth } from '../AuthContext'; // Путь может отличаться в зависимости от структуры вашего проекта
 
 export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const checkAuthentication = () => {
-      // Проверьте, авторизован ли пользователь
-      // Например, проверьте наличие куки с токеном
-      const token = getCookie('token');
-      const isLoggedIn = !!token;
-      setIsLoggedIn(isLoggedIn);
-    };
-  
-    checkAuthentication();
-  }, []);
-
-  const getCookie = (name) => {
-    const cookieValue = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
-    console.log()
-    return cookieValue ? cookieValue.pop() : '';
+  const handleLogout = async () => {
+    await logout();
+    navigate('/'); // Перенаправляем на главную страницу после выхода
   };
 
   return (
@@ -49,11 +38,17 @@ export default function Header() {
             Таймер
           </Button>
         </Link>
-          <Link to={isLoggedIn ? '/logout' : '/login'}>
-          <Button m={2}>
-            {isLoggedIn ? 'Выход' : 'Вход'}
+        {isAuthenticated ? (
+          <Button m={2} onClick={handleLogout}>
+            Выйти
           </Button>
-        </Link>
+        ) : (
+          <Link to="/login">
+            <Button m={2}>
+              Вход
+            </Button>
+          </Link>
+        )}
         <IconButton
           ml={2}
           icon={colorMode === 'dark' ? <SunIcon /> : <MoonIcon />}

@@ -9,22 +9,25 @@ import TimerPage from './pages/TimerPage'; // Импортируйте комп�
 import NotFoundPage from './pages/NotFoundPage';
 import Footer from './components/Footer';
 import UserTable from './pages/UserTable';
+import { AuthProvider } from './AuthContext';
 
 function App() {
   return (
-    <Router>
-      <Header />
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/users" element={<UserTable />} />
-        <Route path="/notes" element={<Notes />} />
-        <Route path="/timer" element={<TimerPage />} /> {/* Добавьте маршрут для таймера и секундомера */}
-        <Route path="/" element={<Home />} />
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-      <Footer />
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/users" element={<UserTable />} />
+          <Route path="/notes" element={<Notes />} />
+          <Route path="/timer" element={<TimerPage />} /> {/* Добавьте маршрут для таймера и секундомера */}
+          <Route path="/" element={<Home />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+        <Footer />
+      </Router>
+    </AuthProvider>
   );
 }
 
